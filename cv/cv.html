@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Melvin Huang CV</title>
+<style>
+  @page { size: A4; margin: 9mm 13mm 8mm; }
+  :root { --ink: #16181d; --soft: #4a4f59; --accent: #1f3a5f; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Arial, Helvetica, sans-serif; font-size: 8.7pt; line-height: 1.26; color: var(--ink); }
+  header { text-align: center; padding-bottom: 3pt; }
+  h1 { font-size: 16.5pt; letter-spacing: 0.05em; margin: 0; color: var(--accent); }
+  .contact { margin: 2pt 0 0; font-size: 8.5pt; color: var(--soft); }
+  section { margin-top: 6pt; }
+  h2 { font-size: 9.2pt; font-weight: bold; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent);
+       margin: 0 0 2pt; padding-bottom: 1.5pt; border-bottom: 1pt solid var(--accent); }
+  .entry { margin-top: 4pt; }
+  .row { display: flex; justify-content: space-between; align-items: baseline; gap: 12pt; }
+  .org { font-weight: bold; font-size: 9.1pt; }
+  .role { font-weight: bold; color: var(--soft); }
+  .meta, .when { color: var(--soft); white-space: nowrap; }
+  ul { margin: 1.5pt 0 0; padding-left: 11pt; }
+  li { margin: 1pt 0; padding-left: 1pt; }
+  li::marker { color: var(--accent); }
+  .k { font-weight: bold; }
+  .skills p { margin: 1.5pt 0; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>LUNG HSIANG (MELVIN) HUANG</h1>
+    <p class="contact">Taipei, Taiwan &nbsp;|&nbsp; huanglongshiang@gmail.com &nbsp;|&nbsp; linkedin.com/in/lung-hsiang-melvin-huang-6ba712316 &nbsp;|&nbsp; melvin0501.github.io</p>
+  </header>
+
+  <section>
+    <h2>Education</h2>
+    <div class="entry">
+      <div class="row"><span class="org">National Taiwan University</span><span class="meta">Taipei, Taiwan</span></div>
+      <div class="row"><span class="role">Bachelor of Business Administration in International Business</span><span class="when">Expected Jun 2028</span></div>
+      <ul>
+        <li>Coursework: Accounting, Financial Management, Money &amp; Banking, Economics, Marketing; EU Studies Certificate (in progress)</li>
+      </ul>
+    </div>
+    <div class="entry">
+      <div class="row"><span class="org">HEC Paris</span><span class="meta">Paris, France</span></div>
+      <div class="row"><span class="role">Exchange Semester, Business</span><span class="when">Aug 2026 – Dec 2026</span></div>
+      <ul>
+        <li>Coursework: Management and Cost Accounting, Strategies for International Expansion, Digitalization and Innovation in Finance</li>
+      </ul>
+    </div>
+    <div class="entry">
+      <div class="row"><span class="org">Taipei Municipal Jianguo High School</span><span class="when">Graduated 2024</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Supply Chain &amp; Analytics Projects</h2>
+    <div class="entry">
+      <div class="row"><span class="org">Taiwan Electronics Supply Chain: Bullwhip Effect &amp; Inventory Cycle Analysis</span><span class="when">Oct 2026</span></div>
+      <div class="row"><span class="role">Self-initiated analysis · Microsoft Excel, Power Query</span><span class="meta">Taipei</span></div>
+      <ul>
+        <li>Mapped the electronics value chain into 5 tiers (foundry, OSAT, IC distribution, ODM, brand), using one listed firm per tier and revenue volatility as a proxy for order variability</li>
+        <li>Built a Power Query ETL pipeline appending 5 sources into a 460-row table with month-end keys, feeding a two-key SUMIFS / INDEX-MATCH model with separate input, calculation and output layers</li>
+        <li>Engineered data-quality controls (missing months, duplicates, record counts) behind one pass/fail flag, reconciled figures to MOPS filings within 0.1%, and regression-tested 50 outputs before switching sources</li>
+        <li>Ran sensitivity analysis over 3 periods: no upstream amplification in 2020–26, but foundry led the 2022–23 inventory correction</li>
+      </ul>
+    </div>
+    <div class="entry">
+      <div class="row"><span class="org">Solar Land-Lease Negotiation: Developer Economics &amp; Deal Structuring</span><span class="when">Nov 2026</span></div>
+      <div class="row"><span class="role">HEC Paris, BCG-designed consulting case · Coordinator &amp; Presenter (team of 10)</span><span class="meta">Paris</span></div>
+      <ul>
+        <li>Coordinated 10 teammates across modelling, research and storyline workstreams into an answer-first, pyramid-principle deck</li>
+        <li>Worked on a DCF model of the developer’s levelized cost of energy, reverse-solving its maximum affordable land rent</li>
+        <li>Stress-tested 3 lease structures in 14 scenarios, mapped the negotiation zone and designed 7 contract terms</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Case Competitions</h2>
+    <div class="entry">
+      <div class="row"><span class="org">NTU College of Management Business Case Competition</span><span class="meta">Taipei</span></div>
+      <div class="row"><span class="role">Champion, 1st of 38 teams · Problem framing, storyline and final pitch</span><span class="when">Dec 2025</span></div>
+      <ul>
+        <li>Final (HeyTea): built an issue tree isolating brand-premium erosion from copycats and price cuts, and franchising risk</li>
+        <li>Prioritized 10 options on an impact × feasibility matrix into a 3-year roadmap tying franchisee incentives to quality scores</li>
+        <li>Preliminary (Maxim’s Cakes): repositioned a heritage bakery for younger customers via a focused launch calendar</li>
+      </ul>
+    </div>
+    <div class="entry">
+      <div class="row"><span class="org">HSBC/HKU Asia Pacific Business Case Challenge 2026</span><span class="meta">Hong Kong</span></div>
+      <div class="row"><span class="role">NTU Representative · Main pitch and Q&amp;A lead</span><span class="when">Jun 2026</span></div>
+      <ul>
+        <li>Solved 3 live cases by hand in 3-hour, device-free rounds against 23 teams from 20 markets: a Pop Mart turnaround, stablecoin adoption in Hong Kong, and a fashion brand’s global expansion</li>
+        <li>Delivered the main pitch and led judges’ Q&amp;A on a market-entry plan pairing a halo-product strategy with market-specific marketing</li>
+      </ul>
+    </div>
+    <div class="entry">
+      <div class="row"><span class="org">Bain Cup Case Competition</span><span class="meta">Remote</span></div>
+      <div class="row"><span class="role">Outstanding Case Award · City-by-city analysis</span><span class="when">May 2026</span></div>
+      <ul>
+        <li>Built a city-level unit-economics model (order value, fulfilment cost, subsidies) for an instant-retail platform losing RMB 170M a year</li>
+        <li>Scored 10 cities on readiness and market potential into 4 tiers (consolidate, fix, test, exit) for a 36-month roadmap</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Leadership &amp; Operations Experience</h2>
+    <div class="entry">
+      <div class="row"><span class="org">Global Leadership Organization (GLO), nonprofit founded at UC Berkeley</span><span class="meta">Taipei</span></div>
+      <div class="row"><span class="role">Director, Product Management (ECHO Program)</span><span class="when">Jul 2025 – Jan 2026</span></div>
+      <ul>
+        <li>Led a 5-person team running a 2-day program for 40 students on a NT$100,000 budget, turning a loss into break-even</li>
+        <li>Traced the loss to venue spend; re-sourced the venue (cost down 50%+), secured a sponsor, and cut catering and transport</li>
+        <li>Split the roadmap into owner-assigned sub-projects tracked weekly; reached 100% satisfaction and an NPS of 87.5</li>
+      </ul>
+      <div class="row" style="margin-top:1.5pt"><span class="role">Business Development Associate · Onboarded 2 of the chapter’s 15 partner organizations</span><span class="when">Jan 2025 – Jun 2025</span></div>
+    </div>
+    <div class="entry">
+      <div class="row"><span class="org">MUN Society Taiwan (MST), national debate-training nonprofit</span><span class="meta">Taipei</span></div>
+      <div class="row"><span class="role">Founding Member &amp; Director</span><span class="when">Jul 2023 – Jul 2026</span></div>
+      <ul>
+        <li>Faculty Advisor, Harvard WorldMUN 2026 (Lima); co-founded Taiwan International MUN; founded ReMUN (break-even)</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="skills">
+    <h2>Skills &amp; Additional Information</h2>
+    <p><span class="k">Excel &amp; tools:</span> Power Query (ETL), SUMIFS, INDEX/MATCH, PivotTables, data validation; PowerPoint, think-cell, Notion</p>
+    <p><span class="k">Analysis:</span> supply chain analysis (bullwhip, inventory cycle), unit economics, cost analysis, budgeting, scenario analysis, DCF</p>
+    <p><span class="k">Languages:</span> Mandarin (native), English (IELTS 8.0), French (B1), German (A2), Taiwanese Hokkien and Thai (conversational)</p>
+    <p><span class="k">Debate &amp; teaching:</span> Model UN club advisor at 2 high schools; 30+ lectures; 41 conferences in 6 countries, 12 awards, 23 committees chaired</p>
+  </section>
+</body>
+</html>

@@ -1,0 +1,12 @@
+---
+import Base from '../layouts/Base.astro';
+import { ui, href } from '../i18n';
+---
+<Base lang="en" path="" title="404" noindex>
+  <article class="detail-page">
+    <div class="page-icon" aria-hidden="true">🧭</div>
+    <h1 class="page-title">{ui.notFound.en}</h1>
+    <p class="lead">{ui.notFound.zh} · {ui.notFound.fr}</p>
+    <p><a href={href('en')}>← {ui.back.en}</a></p>
+  </article>
+</Base>

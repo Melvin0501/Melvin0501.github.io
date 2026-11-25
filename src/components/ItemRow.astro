@@ -1,0 +1,36 @@
+---
+import { href, asset, ui, type Lang } from '../i18n';
+import type { Item } from '../data/items';
+
+/** `thumb`: show the item's first picture on the right (used for case competitions). */
+interface Props { item: Item; lang: Lang; thumb?: boolean }
+const { item, lang, thumb = false } = Astro.props;
+const Tag = item.noPage ? 'div' : 'a';
+const cover = thumb ? (item.thumb ?? item.images?.[0]?.src) : undefined;
+const meta = [item.where?.[lang], item.kind?.[lang]].filter(Boolean).join(' · ');
+---
+
+<li class:list={['row', 'item', { 'no-date': !item.date[lang] }]}>
+  {item.date[lang] && <span class="row-date">{item.date[lang]}</span>}
+  <Tag class:list={['item-link', { 'has-thumb': cover, 'no-page': item.noPage, 'wide-thumb': cover && item.thumbWide }]} href={item.noPage ? undefined : href(lang, `work/${item.slug}/`)}>
+    <div>
+      <h3 class="row-title">{item.title[lang]}</h3>
+      {meta && <p class="row-meta">{meta}</p>}
+      <p class="row-text">{item.summary[lang]}</p>
+      {item.skills && (
+        <div class="row-skills">
+          <span class="row-skills-label">{ui.skillsUsed[lang]}{lang === 'zh' ? '：' : lang === 'fr' ? ' :' : ':'}</span>
+          <ul class="skill-list">{item.skills.map((s) => <li class="tag">{s[lang]}</li>)}</ul>
+        </div>
+      )}
+      {item.badge && <span class:list={['tag', { win: item.win }]}>{item.badge[lang]}</span>}
+    </div>
+    {cover && <img class="item-thumb" src={asset(cover)} alt="" loading="lazy" width="320" height="200" />}
+  </Tag>
+  {item.more && (
+    <p class="row-more">
+      <span>{ui.furtherReading[lang]}</span>
+      <a href={href(lang, item.more.href)}>{item.more.label[lang]} →</a>
+    </p>
+  )}
+</li>

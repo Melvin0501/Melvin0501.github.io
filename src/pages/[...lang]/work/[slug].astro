@@ -1,0 +1,175 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { languages, langParam, toLang, href, asset, ui } from '../../../i18n';
+import { items, type Category } from '../../../data/items';
+
+export function getStaticPaths() {
+  return languages.flatMap((l) =>
+    items.filter((item) => !item.noPage).map((item) => ({ params: { lang: langParam(l), slug: item.slug } })),
+  );
+}
+
+const lang = toLang(Astro.params.lang);
+const item = items.find((i) => i.slug === Astro.params.slug)!;
+
+// Previous / next inside the same category
+const siblings = items.filter((i) => i.category === item.category && !i.hidden && !i.noPage);
+const idx = siblings.indexOf(item);
+const prev = idx >= 0 ? siblings[idx - 1] : undefined;
+const next = idx >= 0 ? siblings[idx + 1] : undefined;
+
+const kicker: Record<Category, string> = {
+  case: ui.caseCompetitions[lang],
+  org: ui.organizational[lang],
+  research: ui.research[lang],
+  interest: ui.interestsSection[lang],
+};
+const anchor: Record<Category, string> = {
+  case: 'case-competitions',
+  org: 'organizational-experience',
+  research: 'analysis',
+  interest: 'interests',
+};
+
+// "To fill in" boxes are notes for you: they show in `npm run dev` but not on the
+// published site. A section that only has a todo box is left out of the published site.
+const showTodo = import.meta.env.DEV;
+const sections = item.sections.filter((s) => showTodo || s.text || s.bullets?.length || s.link);
+
+const props = [
+  { label: ui.role[lang], value: item.role[lang] },
+  { label: ui.date[lang], value: item.date[lang] },
+  { label: ui.where[lang], value: item.where?.[lang] },
+  { label: ui.type[lang], value: item.kind?.[lang] },
+].filter((p) => p.value);
+---
+
+<Base lang={lang} path={`work/${item.slug}/`} title={item.title[lang]} description={item.summary[lang]}>
+  <article class="detail-page">
+    <a class="crumb" href={`${href(lang)}#${anchor[item.category]}`}>← {ui.back[lang]}</a>
+
+    <div class="page-kicker">{kicker[item.category]}</div>
+    <h1 class="page-title">{item.title[lang]}</h1>
+    {item.subtitle && <p class="page-subtitle">{item.subtitle[lang]}</p>}
+
+    <dl class="props">
+      {
+        props.map((p) => (
+          <>
+            <dt>{p.label}</dt>
+            <dd>{p.value}</dd>
+          </>
+        ))
+      }
+      {
+        item.skills && (
+          <>
+            <dt>{ui.skillsUsed[lang]}</dt>
+            <dd><ul class="skill-list">{item.skills.map((s) => <li class="tag">{s[lang]}</li>)}</ul></dd>
+          </>
+        )
+      }
+      {
+        item.badge && (
+          <>
+            <dt>{ui.result[lang]}</dt>
+            <dd>
+              <span class:list={['badge', { win: item.win }]}>{item.badge[lang]}</span>
+            </dd>
+          </>
+        )
+      }
+    </dl>
+
+    <p class="lead">{item.summary[lang]}</p>
+
+    {
+      sections.map((s) => (
+        <section class="block">
+          <h2>{s.heading[lang]}</h2>
+          {s.text && <p>{s.text[lang]}</p>}
+          {s.bullets && (
+            <ul>
+              {s.bullets.map((b) => (
+                <li>{b[lang]}</li>
+              ))}
+            </ul>
+          )}
+          {s.image && (
+            <figure class="inline-figure">
+              <a href={asset(s.image.src)} target="_blank" rel="noopener">
+                <img src={asset(s.image.src)} alt={s.image.alt[lang]} loading="lazy" />
+              </a>
+              {s.image.caption && <figcaption>{s.image.caption[lang]}</figcaption>}
+            </figure>
+          )}
+          {s.link && (
+            <p class="sub-link"><a href={href(lang, s.link.href)}>{s.link.label[lang]} →</a></p>
+          )}
+          {showTodo && s.todo && (
+            <div class="todo">
+              <strong>{ui.toFill[lang]}</strong>
+              {s.todo[lang]}
+            </div>
+          )}
+        </section>
+      ))
+    }
+
+    {
+      item.images && item.images.length > 0 && (
+        <section class="block">
+          <h2>{ui.gallery[lang]}</h2>
+          <div class="gallery">
+            {item.images.map((img) => (
+              <figure>
+                <a href={asset(img.src)} target="_blank" rel="noopener">
+                  <img src={asset(img.src)} alt={img.alt[lang]} loading="lazy" />
+                </a>
+                {img.caption && <figcaption>{img.caption[lang]}</figcaption>}
+              </figure>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    {
+      item.files && item.files.length > 0 && (
+        <section class="block">
+          <h2>{ui.files[lang]}</h2>
+          <ul class="files">
+            {item.files.map((f) => (
+              <li>
+                <a href={asset(f.src)} target="_blank" rel="noopener">
+                  <span class="file-type">{f.type}</span>
+                  <span class="file-name">{f.label[lang]}</span>
+                  <span class="file-arrow" aria-hidden="true">↗</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <nav class="pager" aria-label="More">
+      {
+        prev && (
+          <a href={href(lang, `work/${prev.slug}/`)}>
+            <small>← {ui.previous[lang]}</small>
+            <span>{prev.title[lang]}</span>
+          </a>
+        )
+      }
+      {
+        next && (
+          <a class="next" href={href(lang, `work/${next.slug}/`)}>
+            <small>{ui.next[lang]} →</small>
+            <span>{next.title[lang]}</span>
+          </a>
+        )
+      }
+    </nav>
+  </article>
+</Base>

@@ -1,0 +1,74 @@
+---
+// Left column of the homepage (sticky on wide screens): photo, name, role, icon links, location.
+import { ui, asset, type Lang } from '../i18n';
+import { profile } from '../data/profile';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+---
+
+<aside class="profile">
+  {
+    profile.photo ? (
+      <img class="avatar" src={asset(profile.photo)} alt={profile.name} width="160" height="160" />
+    ) : (
+      <div class="avatar avatar-initials" aria-hidden="true">{profile.initials}</div>
+    )
+  }
+  <h1 class="profile-name">{profile.name}</h1>
+  <p class="profile-role">{profile.tagline[lang]}</p>
+
+  <ul class="profile-links" aria-label={ui.contact[lang]}>
+    <li>
+      <a class="cv-link" href={asset(profile.cv)} target="_blank" rel="noopener">{ui.viewCv[lang]}</a>
+    </li>
+    <li>
+      <a href={`mailto:${profile.email}`} title="Email" aria-label="Email">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1.5"></rect><path d="m3.5 6.5 8.5 6.5 8.5-6.5"></path></svg>
+      </a>
+    </li>
+    <li>
+      <a href={profile.linkedin} target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"></path></svg>
+      </a>
+    </li>
+    {
+      profile.substack && (
+        <li>
+          <a href={profile.substack} target="_blank" rel="noopener" title="Substack" aria-label="Substack">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 3h18v2.6H3V3Zm0 5h18v2.6H3V8Zm0 5h18v8.5l-9-5-9 5V13Z"></path></svg>
+          </a>
+        </li>
+      )
+    }
+  </ul>
+
+  <p class="profile-location">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg>
+    {profile.location[lang]}
+  </p>
+
+  <section class="side-sec" aria-labelledby="education-title">
+    <h2 class="label" id="education-title">{ui.education[lang]}</h2>
+    <ul class="side-list">
+      {
+        profile.education.map((e) => (
+          <li>
+            <p class="side-title">{e.school[lang]}</p>
+            <p class="side-date">{e.period[lang]}</p>
+            {e.points.length > 1 ? (
+              <ul class="row-points">{e.points.map((pt) => <li>{pt[lang]}</li>)}</ul>
+            ) : (
+              e.points.map((pt) => <p class="row-sub">{pt[lang]}</p>)
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="side-sec" aria-labelledby="languages-title">
+    <h2 class="label" id="languages-title">{ui.languages[lang]}</h2>
+    <ul class="side-langs">{profile.languages.map((l) => <li>{l[lang]}</li>)}</ul>
+  </section>
+</aside>

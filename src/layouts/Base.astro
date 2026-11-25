@@ -1,0 +1,161 @@
+---
+import '@fontsource-variable/source-serif-4';
+import '@fontsource-variable/inter';
+import '@fontsource/ibm-plex-mono/400.css';
+import '../styles/global.css';
+import { languages, langLabels, htmlLang, href, asset, ui, type Lang } from '../i18n';
+import { profile } from '../data/profile';
+
+interface Props {
+  lang: Lang;
+  /** Path of this page without the language prefix, e.g. '' or 'work/glo/' */
+  path: string;
+  title?: string;
+  description?: string;
+  /** Leave the page out of search engines (used by the 404 page). */
+  noindex?: boolean;
+}
+
+const { lang, path, title, description, noindex = false } = Astro.props;
+const pageTitle = title ? `${title} · ${profile.name}` : `${profile.name} · ${profile.nativeName}`;
+const desc = description ?? profile.tagline[lang];
+
+/** Full URL (https://…) for a link inside the site, used by search engines and link previews. */
+const abs = (p: string) => new URL(p, Astro.site ?? Astro.url).href;
+const canonical = abs(href(lang, path));
+const ogLocale: Record<Lang, string> = { en: 'en_US', zh: 'zh_TW', fr: 'fr_FR' };
+/** Section links in the top bar (ids of the homepage sections). */
+const toc = [
+  { id: 'case-competitions', label: ui.navCases[lang] },
+  { id: 'organizational-experience', label: ui.navOrgs[lang] },
+  { id: 'analysis', label: ui.navAnalysis[lang] },
+  { id: 'interests', label: ui.navInterests[lang] },
+];
+---
+
+<!doctype html>
+<html lang={htmlLang[lang]}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={desc} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={profile.legalName} />
+    <meta property="og:locale" content={ogLocale[lang]} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={desc} />
+    {!noindex && <meta property="og:url" content={canonical} />}
+    {
+      profile.photo && <meta property="og:image" content={abs(asset(profile.photo))} />
+    }
+    <script is:inline>
+      // Set the theme before the page paints, so there is no flash.
+      (function () {
+        var saved = null;
+        try { saved = localStorage.getItem('theme'); } catch (e) {}
+        var dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+      })();
+    </script>
+    <link rel="icon" type="image/svg+xml" href={asset('favicon.svg')} />
+    {
+      !noindex && (
+        <>
+          <link rel="canonical" href={canonical} />
+          {languages.map((l) => <link rel="alternate" hreflang={htmlLang[l]} href={abs(href(l, path))} />)}
+          <link rel="alternate" hreflang="x-default" href={abs(href('en', path))} />
+        </>
+      )
+    }
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <a class="brand" href={href(lang)}>
+          {profile.name}<span class="brand-native">{profile.nativeName}</span>
+        </a>
+        <nav class="toc" aria-label={ui.sections[lang]}>
+          {toc.map((s) => <a href={`${href(lang)}#${s.id}`} data-toc={s.id}>{s.label}</a>)}
+        </nav>
+        <nav class="nav" aria-label="Main">
+          <div class="lang-switch" role="group" aria-label="Language">
+            {
+              languages.map((l) => (
+                <a href={href(l, path)} hreflang={htmlLang[l]} aria-current={l === lang ? 'true' : 'false'}>
+                  {langLabels[l]}
+                </a>
+              ))
+            }
+          </div>
+          <button class="theme-toggle" type="button" data-theme-toggle aria-label={ui.theme[lang]} title={ui.theme[lang]}>
+            <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"></path></svg>
+            <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <span>© {new Date().getFullYear()} {profile.legalName} {profile.nativeName}</span>
+        <a href={`mailto:${profile.email}`}>{profile.email}</a>
+      </div>
+    </footer>
+    <script is:inline>
+      document.querySelector('[data-theme-toggle]')?.addEventListener('click', function () {
+        var next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+        document.documentElement.dataset.theme = next;
+        try { localStorage.setItem('theme', next); } catch (e) {}
+      });
+      // Underline the section link for the part of the homepage being read.
+      (function () {
+        var links = document.querySelectorAll('[data-toc]');
+        if (!links.length) return;
+        var secs = [];
+        links.forEach(function (a) { var s = document.getElementById(a.dataset.toc); if (s) secs.push(s); });
+        if (!secs.length) return;
+        var currentId = null;
+        function update() {
+          var id = null;
+          var line = window.innerHeight * 0.35;
+          secs.forEach(function (s) { if (s.getBoundingClientRect().top <= line) id = s.id; });
+          // At the very bottom, the last section is the one being read even if it is short.
+          if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) id = secs[secs.length - 1].id;
+          if (id === currentId) return;
+          currentId = id;
+          links.forEach(function (a) {
+            var on = a.dataset.toc === id;
+            a.classList.toggle('is-current', on);
+            var bar = a.parentElement;
+            if (on && bar.scrollWidth > bar.clientWidth) bar.scrollTo({ left: a.offsetLeft - 18, behavior: 'smooth' });
+          });
+        }
+        var ticking = false;
+        window.addEventListener('scroll', function () {
+          if (ticking) return;
+          ticking = true;
+          requestAnimationFrame(function () { ticking = false; update(); });
+        }, { passive: true });
+        window.addEventListener('resize', update);
+        update();
+      })();
+      // Until the visitor picks a theme with the button, follow the system setting live.
+      (function () {
+        var mq = window.matchMedia('(prefers-color-scheme: dark)');
+        var follow = function (e) {
+          var saved = null;
+          try { saved = localStorage.getItem('theme'); } catch (err) {}
+          if (!saved) document.documentElement.dataset.theme = e.matches ? 'dark' : 'light';
+        };
+        if (mq.addEventListener) mq.addEventListener('change', follow);
+        else if (mq.addListener) mq.addListener(follow);
+      })();
+    </script>
+  </body>
+</html>

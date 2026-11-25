@@ -1,0 +1,91 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProfileCard from '../../components/ProfileCard.astro';
+import ItemRow from '../../components/ItemRow.astro';
+import { languages, langParam, toLang, href, asset, ui } from '../../i18n';
+import { profile } from '../../data/profile';
+import { byCategory, orgs, itemsOfOrg } from '../../data/items';
+
+export function getStaticPaths() {
+  return languages.map((l) => ({ params: { lang: langParam(l) } }));
+}
+
+const lang = toLang(Astro.params.lang);
+const cases = byCategory('case');
+const research = byCategory('research');
+const interests = byCategory('interest');
+---
+
+<Base lang={lang} path="">
+  <div class="home">
+    <ProfileCard lang={lang} />
+
+    <div class="home-main">
+      <section class="sec about" aria-labelledby="about-title">
+        <h2 class="label" id="about-title">{ui.about[lang]}</h2>
+        {profile.bio.map((p) => <p>{p[lang]}</p>)}
+      </section>
+
+      <section class="sec" id="case-competitions" aria-labelledby="cases-title">
+        <h2 class="label" id="cases-title">{ui.caseCompetitions[lang]}</h2>
+        <ul class="rows">
+          {cases.map((item) => <ItemRow item={item} lang={lang} thumb />)}
+        </ul>
+      </section>
+
+      <section class="sec" id="organizational-experience" aria-labelledby="org-title">
+        <h2 class="label" id="org-title">{ui.organizational[lang]}</h2>
+        <ul class="orgs">
+          {
+            orgs.map((o) => (
+              <li class="org">
+                <div class:list={['org-pic', { round: o.round }]}>
+                  {o.image ? <img src={asset(o.image)} alt="" loading="lazy" width="240" height="240" /> : <span aria-hidden="true">{o.initials}</span>}
+                </div>
+                <div class="org-body">
+                  <p class="row-title">{o.name[lang]}</p>
+                  <p class="row-meta">{o.subtitle[lang]}</p>
+                  <p class="side-date">{o.period[lang]}</p>
+                  <ul class="org-items">
+                    {itemsOfOrg(o.id).map((it) => (
+                      <li class:list={{ 'has-thumb': it.images?.[0] }}>
+                        <div>
+                        <a class="org-item-title" href={href(lang, `work/${it.slug}/`)}>{it.title[lang]}</a>
+                        <p class="org-role">
+                          <em>{it.role[lang]}</em>
+                          {it.date[lang] && <span class="org-date">{it.date[lang]}</span>}
+                        </p>
+                        <p class="row-text">{it.summary[lang]}</p>
+                        {it.badge && <span class:list={['tag', { win: it.win }]}>{it.badge[lang]}</span>}
+                        </div>
+                        {it.images?.[0] && (
+                          <a class="org-thumb" href={href(lang, `work/${it.slug}/`)} tabindex="-1" aria-hidden="true">
+                            <img class="item-thumb" src={asset(it.images[0].src)} alt="" loading="lazy" width="320" height="200" />
+                          </a>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <section class="sec" id="analysis" aria-labelledby="research-title">
+        <h2 class="label" id="research-title">{ui.research[lang]}</h2>
+        <ul class="rows">
+          {research.map((item) => <ItemRow item={item} lang={lang} thumb />)}
+        </ul>
+      </section>
+
+      <section class="sec" id="interests" aria-labelledby="interests-title">
+        <h2 class="label" id="interests-title">{ui.interestsSection[lang]}</h2>
+        <ul class="rows">
+          {interests.map((item) => <ItemRow item={item} lang={lang} thumb />)}
+        </ul>
+      </section>
+    </div>
+  </div>
+</Base>
